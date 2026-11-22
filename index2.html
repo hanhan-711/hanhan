@@ -221,7 +221,7 @@ html,body{width:100%;height:100%;background:#000;color:#fff;overflow:hidden;posi
     60%{transform:translateX(-50%) translateY(0) scaleX(1)}
     85%{opacity:.9;transform:translateX(-50%) translateY(0) scaleX(1)}
     100%{opacity:0;transform:translateX(-50%) translateY(0) scaleX(1)}
-}
+           }
 .notify-stack-wrap{position:absolute;bottom:140px;left:16px;right:16px;z-index:15;display:flex;flex-direction:column;gap:10px;transition:opacity .3s ease,height .38s cubic-bezier(.32,.72,0,1)}
 .notify-stack-wrap.hidden-notify{opacity:0;pointer-events:none}
 
@@ -1033,7 +1033,7 @@ function openIMessage(){
   isPasscodeOpen = false;
   notifyStackWrap.classList.remove("hidden-notify");
   clearLockNotifications();
-                                                                }
+    }
 function closeIMessage(){
   imPage.classList.remove("show");
   applySlide(false);
@@ -1206,7 +1206,7 @@ function bindMouseDrag(target, isPullDown){
         currentTranslateY = -pageH() + Math.min(delta, pageH());
       }
       lockPage.style.transform = `translateY(${currentTranslateY}px)`;
-  }    function mouseUp(){
+    }    function mouseUp(){
       if(!isPullDown) applySlide(Math.abs(currentTranslateY) > threshold);
       else applySlide(pageH() + currentTranslateY <= threshold);
       document.removeEventListener('mousemove', mouseMove);
@@ -1377,14 +1377,14 @@ function saveAllData() {
         imBg: imPage.style.backgroundImage
     };
     try {
-        localStorage.setItem('iosLockSaveData2', JSON.stringify(data));
+        localStorage.setItem('iosLockSaveData', JSON.stringify(data));
     } catch(e) {
         console.warn("本地存储可能已满，图片未能保存", e);
     }
 }
 
 function loadAllData() {
-    const raw = localStorage.getItem('iosLockSaveData2');
+    const raw = localStorage.getItem('iosLockSaveData');
     if (!raw) return;
     try {
         const data = JSON.parse(raw);

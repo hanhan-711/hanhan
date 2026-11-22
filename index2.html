@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -46,182 +45,6 @@ html,body{width:100%;height:100%;background:#000;color:#fff;overflow:hidden;posi
     85%{opacity:.9;transform:translateX(-50%) translateY(0) scaleX(1)}
     100%{opacity:0;transform:translateX(-50%) translateY(0) scaleX(1)}
 }
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>iOS锁屏</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC",sans-serif}
-html,body{width:100%;height:100%;background:#000;color:#fff;overflow:hidden;position:fixed;top:0;left:0}
-
-.lockscreen-wrap{width:100vw;height:100vh;position:relative;overflow:hidden;transform:scale(.94);transform-origin:center center}
-.lock-page{position:absolute;width:100%;height:100%;background:#000;transition:transform .48s cubic-bezier(.33,1,.66,1);z-index:2;background-size:cover;background-position:center}
-.passcode-page{position:absolute;width:100%;height:100%;z-index:1;padding-top:140px;display:flex;flex-direction:column;align-items:center;overflow:hidden}
-.passcode-blur-wallpaper{position:absolute;inset:0;z-index:-1;background-size:cover;background-position:center;filter:blur(12px);transform:scale(1.08);background-repeat:no-repeat}
-.passcode-mask{position:absolute;inset:0;background:rgba(0,0,0,.28);z-index:0}
-
-.status-bar{position:absolute;top:0;left:0;right:0;height:46px;display:flex;justify-content:space-between;align-items:center;padding:0 22px;font-size:17px;font-weight:600;z-index:20}
-.status-left{cursor:pointer}
-.status-right{display:flex;align-items:center;gap:4px}
-.volume-click-area{cursor:pointer;padding:4px}
-.signal-icon{width:20px;height:10px;fill:#fff}
-.wifi-icon{width:18px;height:10px;fill:#fff}
-.battery-icon{width:26px;height:13px;fill:#fff}
-#imgFileInput{display:none}
-
-.date-line{position:absolute;top:60px;left:0;right:0;text-align:center;font-size:20px;font-weight:500;letter-spacing:.5px;opacity:.92;z-index:10}
-.time-line{position:absolute;top:102px;left:0;right:0;text-align:center;font-size:125px;font-weight:200;letter-spacing:-2px;line-height:1;color:rgba(255,255,255,.92);text-shadow:0 0 6px rgba(255,255,255,.18),0 0 18px rgba(255,255,255,.12),0 2px 4px rgba(0,0,0,.22);z-index:10}
-
-.swipe-hint{position:absolute;bottom:100px;width:100%;text-align:center;font-size:17px;opacity:0;animation:swipeBounce 2.2s ease-out forwards}
-@keyframes swipeBounce{0%{opacity:0;transform:translateY(8px)}15%{opacity:1;transform:translateY(-6px)}30%{transform:translateY(4px)}45%{transform:translateY(-2px)}60%{transform:translateY(0)}80%{opacity:1}100%{opacity:0}}
-
-.bottom-container{position:absolute;bottom:60px;left:0;right:0;display:flex;justify-content:space-between;padding:0 40px;z-index:20}
-.glass-btn{width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);box-shadow:0 0 0 1px rgba(255,255,255,.03),0 1px 1px rgba(255,255,255,.08) inset,0 2px 6px rgba(0,0,0,.08);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center}
-.glass-btn svg{width:30px;height:30px;fill:#fff;opacity:.92;filter:drop-shadow(0 1px 1px rgba(0,0,0,.12))}
-
-.home-indicator{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:#fff;opacity:.7;z-index:20}
-.home-indicator.show-home{animation:homeBounce 2s ease-out forwards}
-.home-indicator.hide-home{display:none}
-@keyframes homeBounce{
-    0%{opacity:0;transform:translateX(-50%) translateY(10px) scaleX(.9)}
-    15%{opacity:.9;transform:translateX(-50%) translateY(-4px) scaleX(1)}
-    30%{transform:translateX(-50%) translateY(2px) scaleX(1)}
-    45%{transform:translateX(-50%) translateY(-2px) scaleX(1)}
-    60%{transform:translateX(-50%) translateY(0) scaleX(1)}
-    85%{opacity:.9;transform:translateX(-50%) translateY(0) scaleX(1)}
-    100%{opacity:0;transform:translateX(-50%) translateY(0) scaleX(1)}
-}
-
-.notify-stack-wrap{position:absolute;bottom:140px;left:16px;right:16px;z-index:15;display:flex;flex-direction:column;gap:10px;transition:opacity .3s ease,height .38s cubic-bezier(.32,.72,0,1)}
-.notify-stack-wrap.hidden-notify{opacity:0;pointer-events:none}
-
-.notify-stack-wrap.stacked{height:96px;justify-content:flex-start}
-.notify-stack-wrap.stacked .notification-wrap{position:absolute;left:0;right:0;top:0}
-.notify-stack-wrap.stacked .notification-wrap:first-child{position:relative;z-index:2;overflow:visible}
-.notify-stack-wrap.stacked .notification-wrap:not(:first-child){display:none}
-.notify-stack-wrap.stacked::before{
-    content:"";
-    position:absolute;
-    left:0;right:0;top:0;
-    height:56px;
-    transform:translateY(12px) scaleX(.94);
-    z-index:1;
-    background:rgba(255,255,255,.10);
-    backdrop-filter:blur(30px) saturate(180%);
-    -webkit-backdrop-filter:blur(30px) saturate(180%);
-    border:1px solid rgba(255,255,255,.15);
-    border-radius:22px;
-    box-shadow:0 8px 24px rgba(0,0,0,.26);
-    pointer-events:none;
-}
-.notify-stack-wrap.stacked::after{
-    content:"";
-    position:absolute;
-    left:0;right:0;top:0;
-    height:56px;
-    transform:translateY(24px) scaleX(.88);
-    z-index:1;
-    background:rgba(255,255,255,.07);
-    backdrop-filter:blur(30px) saturate(180%);
-    -webkit-backdrop-filter:blur(30px) saturate(180%);
-    border:1px solid rgba(255,255,255,.12);
-    border-radius:22px;
-    box-shadow:0 8px 24px rgba(0,0,0,.24);
-    pointer-events:none;
-}
-
-.notify-stack-wrap.expanded{
-    height:auto;
-    max-height:calc(100vh - 300px);
-    overflow-y:auto;
-    -webkit-overflow-scrolling:touch;
-    overscroll-behavior:contain;
-    flex-direction:column;
-    justify-content:flex-start;
-}
-.notify-stack-wrap.expanded .notification-wrap{position:relative;transform:none!important;top:auto;overflow:visible}
-.notify-stack-wrap.expanded .notification-wrap .notification-item{height:auto;overflow:visible}
-
-.notification-wrap{width:100%;position:relative;border-radius:22px;touch-action:pan-y}
-
-.notify-action-bg{position:absolute;inset:0;display:flex;align-items:stretch;justify-content:flex-end;gap:8px;padding:0;z-index:1;opacity:0;transition:opacity .18s ease;pointer-events:none;background:transparent}
-.notification-wrap.swiped .notify-action-bg{opacity:1;pointer-events:auto}
-.notify-action-btn,
-.notify-action-btn.btn-reply,
-.notify-action-btn.btn-delete{
-    width:62px;
-    height:100%;
-    box-sizing:border-box;
-    border-radius:22px;
-    background:rgba(255,255,255,.14);
-    backdrop-filter:blur(18px) saturate(160%);
-    -webkit-backdrop-filter:blur(18px) saturate(160%);
-    border:1px solid rgba(255,255,255,.22);
-    color:#fff;
-    display:flex;    align-items:center;
-    justify-content:center;
-    text-align:center;
-    font-size:14px;
-    font-weight:500;
-    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;
-    line-height:1;
-    letter-spacing:.5px;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    flex-shrink:0;
-    align-self:stretch;
-}
-
-.notification-item{width:100%;background:rgba(255,255,255,.10);backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blu```html
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>iOS锁屏 · 自动存档版</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC",sans-serif}
-html,body{width:100%;height:100%;background:#000;color:#fff;overflow:hidden;position:fixed;top:0;left:0}
-
-.lockscreen-wrap{width:100vw;height:100vh;position:relative;overflow:hidden;transform:scale(.94);transform-origin:center center}
-.lock-page{position:absolute;width:100%;height:100%;background:#000;transition:transform .48s cubic-bezier(.33,1,.66,1);z-index:2;background-size:cover;background-position:center}
-.passcode-page{position:absolute;width:100%;height:100%;z-index:1;padding-top:140px;display:flex;flex-direction:column;align-items:center;overflow:hidden}
-.passcode-blur-wallpaper{position:absolute;inset:0;z-index:-1;background-size:cover;background-position:center;filter:blur(12px);transform:scale(1.08);background-repeat:no-repeat}
-.passcode-mask{position:absolute;inset:0;background:rgba(0,0,0,.28);z-index:0}
-
-.status-bar{position:absolute;top:0;left:0;right:0;height:46px;display:flex;justify-content:space-between;align-items:center;padding:0 22px;font-size:17px;font-weight:600;z-index:20}
-.status-left{cursor:pointer}
-.status-right{display:flex;align-items:center;gap:4px}
-.volume-click-area{cursor:pointer;padding:4px}
-.signal-icon{width:20px;height:10px;fill:#fff}
-.wifi-icon{width:18px;height:10px;fill:#fff}
-.battery-icon{width:26px;height:13px;fill:#fff}
-#imgFileInput{display:none}
-
-.date-line{position:absolute;top:60px;left:0;right:0;text-align:center;font-size:20px;font-weight:500;letter-spacing:.5px;opacity:.92;z-index:10}
-.time-line{position:absolute;top:102px;left:0;right:0;text-align:center;font-size:125px;font-weight:200;letter-spacing:-2px;line-height:1;color:rgba(255,255,255,.92);text-shadow:0 0 6px rgba(255,255,255,.18),0 0 18px rgba(255,255,255,.12),0 2px 4px rgba(0,0,0,.22);z-index:10}
-
-.swipe-hint{position:absolute;bottom:100px;width:100%;text-align:center;font-size:17px;opacity:0;animation:swipeBounce 2.2s ease-out forwards}
-@keyframes swipeBounce{0%{opacity:0;transform:translateY(8px)}15%{opacity:1;transform:translateY(-6px)}30%{transform:translateY(4px)}45%{transform:translateY(-2px)}60%{transform:translateY(0)}80%{opacity:1}100%{opacity:0}}
-
-.bottom-container{position:absolute;bottom:60px;left:0;right:0;display:flex;justify-content:space-between;padding:0 40px;z-index:20}
-.glass-btn{width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);box-shadow:0 0 0 1px rgba(255,255,255,.03),0 1px 1px rgba(255,255,255,.08) inset,0 2px 6px rgba(0,0,0,.08);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center}
-.glass-btn svg{width:30px;height:30px;fill:#fff;opacity:.92;filter:drop-shadow(0 1px 1px rgba(0,0,0,.12))}
-
-.home-indicator{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:#fff;opacity:.7;z-index:20}
-.home-indicator.show-home{animation:homeBounce 2s ease-out forwards}
-.home-indicator.hide-home{display:none}
-@keyframes homeBounce{
-    0%{opacity:0;transform:translateX(-50%) translateY(10px) scaleX(.9)}
-    15%{opacity:.9;transform:translateX(-50%) translateY(-4px) scaleX(1)}
-    30%{transform:translateX(-50%) translateY(2px) scaleX(1)}
-    45%{transform:translateX(-50%) translateY(-2px) scaleX(1)}
-    60%{transform:translateX(-50%) translateY(0) scaleX(1)}
-    85%{opacity:.9;transform:translateX(-50%) translateY(0) scaleX(1)}
-    100%{opacity:0;transform:translateX(-50%) translateY(0) scaleX(1)}
-           }
 .notify-stack-wrap{position:absolute;bottom:140px;left:16px;right:16px;z-index:15;display:flex;flex-direction:column;gap:10px;transition:opacity .3s ease,height .38s cubic-bezier(.32,.72,0,1)}
 .notify-stack-wrap.hidden-notify{opacity:0;pointer-events:none}
 
@@ -238,8 +61,7 @@ html,body{width:100%;height:100%;background:#000;color:#fff;overflow:hidden;posi
     content:"";position:absolute;left:0;right:0;top:0;height:56px;transform:translateY(24px) scaleX(.88);z-index:1;
     background:rgba(255,255,255,.07);backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);
     border:1px solid rgba(255,255,255,.12);border-radius:22px;box-shadow:0 8px 24px rgba(0,0,0,.24);pointer-events:none;
-}
-.notify-stack-wrap.expanded{height:auto;max-height:calc(100vh - 300px);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;flex-direction:column;justify-content:flex-start;}
+}.notify-stack-wrap.expanded{height:auto;max-height:calc(100vh - 300px);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;flex-direction:column;justify-content:flex-start;}
 .notify-stack-wrap.expanded .notification-wrap{position:relative;transform:none!important;top:auto;overflow:visible}
 .notify-stack-wrap.expanded .notification-wrap .notification-item{height:auto;overflow:visible}
 
@@ -295,8 +117,7 @@ html,body{width:100%;height:100%;background:#000;color:#fff;overflow:hidden;posi
 .btn-delete{grid-column:3;font-size:19px}
 .config-overlay{position:fixed;inset:0;background:rgba(0,0,0,.42);backdrop-filter:blur(5px);z-index:99;display:none;align-items:center;justify-content:center;padding:16px}
 .config-modal{width:100%;max-width:340px;max-height:78vh;overflow-y:auto;background:rgba(28,28,30,.92);border-radius:18px;padding:18px}
-.config-group{margin-bottom:14px}
-.config-label{font-size:14px;color:#aeaeb2;display:block;margin-bottom:6px;font-weight:500}
+.config-group{margin-bottom:14px}.config-label{font-size:14px;color:#aeaeb2;display:block;margin-bottom:6px;font-weight:500}
 .config-input-wrap{position:relative}
 .config-input,.config-textarea{width:100%;background:#2c2c2e;border:0;border-radius:12px;color:#fff;font-size:14px;padding:11px 14px;outline:none}
 .config-textarea{min-height:90px;resize:vertical;line-height:1.45}
@@ -352,7 +173,7 @@ html,body{width:100%;height:100%;background:#000;color:#fff;overflow:hidden;posi
     width:36px;height:36px;border-radius:50%;flex-shrink:0;overflow:visible;cursor:pointer;position:relative;
     background:radial-gradient(circle at 36% 28%, rgba(255,255,255,0.18) 0%, transparent 32%),linear-gradient(145deg, #636378 0%, #424252 48%, #353542 100%);
     box-shadow:inset 0 1px 1px rgba(255,255,255,.3),inset 0 -1px 1px rgba(0,0,0,.3),0 1px 3px rgba(0,0,0,.5);
-}.im-row .im-bubble-avatar::before{content:"";position:absolute;width:12px;height:12px;border-radius:50%;background:linear-gradient(145deg, rgba(255,255,255,.98), rgba(245,245,255,.92));top:7px;left:50%;transform:translateX(-50%);}
+            }.im-row .im-bubble-avatar::before{content:"";position:absolute;width:12px;height:12px;border-radius:50%;background:linear-gradient(145deg, rgba(255,255,255,.98), rgba(245,245,255,.92));top:7px;left:50%;transform:translateX(-50%);}
 .im-row .im-bubble-avatar::after{content:"";position:absolute;width:20px;height:11px;border-radius:11px;background:linear-gradient(145deg, rgba(255,255,255,.98), rgba(250,250,255,.92));bottom:6px;left:50%;transform:translateX(-50%);}
 .im-row .im-bubble-avatar.use-photo{overflow:hidden}
 .im-row .im-bubble-avatar.use-photo::before,.im-row .im-bubble-avatar.use-photo::after{display:none}
@@ -424,8 +245,7 @@ html,body{width:100%;height:100%;background:#000;color:#fff;overflow:hidden;posi
 <div class="config-input-wrap">
 <input type="password"class="config-input"id="apiKey"placeholder="输入 API Key">
 <svg class="eye-toggle"id="eyeIcon"viewBox="0 0 24 24"><path class="eye-path-show"d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/><path class="eye-path-hide"style="display:none"d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46A11.8 11.8 0 0 0 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78 3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/></svg>
-</div>
-</div>
+</div></div>
 <div class="config-group">
 <label class="config-label">API Base URL</label>
 <input type="text"class="config-input"id="apiBase"value="https://api.deepseek.com">
@@ -477,8 +297,7 @@ html,body{width:100%;height:100%;background:#000;color:#fff;overflow:hidden;posi
 <input class="im-name-input"id="imNameInput">
 <div class="im-name"id="imName">+86 102713</div>
 <span class="im-name-arrow">></span>
-</div>
-</div>
+</div></div>
 <div class="im-cam"id="imCam">
 <svg viewBox="0 0 24 24"><path d="M4 6h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"></path><polygon points="18 8 22 6 22 18 18 16"></polygon></svg>
 </div>
@@ -596,8 +415,7 @@ function updateStackState(){
   const count = wraps.length;
   notifyStackWrap.querySelectorAll(".notify-count").forEach(el=>el.remove());
 
-  if(count >= 4){
-    notifyStackWrap.classList.remove("expanded");
+  if(count >= 4){    notifyStackWrap.classList.remove("expanded");
     notifyStackWrap.classList.add("stacked");
     const item = wraps[0].querySelector(".notification-item");
     if(item){
@@ -656,8 +474,7 @@ function bindSwipe(wrap, itemDom, onDelete, onReply, onSlideOpen){
     if(locked === null){
       if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 6) locked = "x";
       else if(Math.abs(dy) > 6) locked = "y";
-    }
-    if(locked !== "x") return;
+      }    if(locked !== "x") return;
     setX(startOffset + dx, false);
   }
   function onEnd(){
@@ -816,8 +633,7 @@ function splitLines(text){
 function refineLines(lines, need){
   if(lines.length >= need) return lines;
   const out = [];
-  lines.forEach(l=>{
-    const parts = l.split(/[，,；;：:—]+/).map(s=>s.trim()).filter(Boolean);
+  lines.forEach(l=>{    const parts = l.split(/[，,；;：:—]+/).map(s=>s.trim()).filter(Boolean);
     if(parts.length > 1) out.push(...parts); else out.push(l);
   });
   return out;
@@ -853,7 +669,7 @@ async function requestAI(userMsg){
   }catch(e){
     return "消息发送失败，请检查API配置";
   }
-}
+  }
 async function fetchLines(need, userMsg){
   let lines = [];
   let msg = userMsg;
@@ -881,7 +697,6 @@ async function handleUserMessage(userMsg){
   if(rid !== roundId) return;       // 等请求期间你又发了 → 这轮作废
   pushBatch(lines, batch, rid);
 }
-
 /* ============ 锁屏回复 ============ */
 replyCancel.onclick = ()=>{ replyOverlay.style.display="none"; activeNotifyItem=null; };
 replySend.onclick = async ()=>{
@@ -939,8 +754,7 @@ function imAppendBubble(text, isMe, animate=true){
     if(myAvatarSrc){
       av.classList.add("use-photo");
       av.innerHTML = `<img src="${myAvatarSrc}" alt="">`;
-    }
-    av.title = "点击设置我的头像";
+    }    av.title = "点击设置我的头像";
     av.onclick = ()=> myAvatarInput.click();
   } else {
     const info = getAssistantInfo();
@@ -997,8 +811,7 @@ function imHideTyping(){
 }
 
 async function imSendMsg(){
-  if(imIsSending) return;
-  const txt = imInput.value.trim();
+  if(imIsSending) return;  const txt = imInput.value.trim();
   if(!txt) return;
   imIsSending = true;
 
@@ -1033,7 +846,7 @@ function openIMessage(){
   isPasscodeOpen = false;
   notifyStackWrap.classList.remove("hidden-notify");
   clearLockNotifications();
-    }
+  }
 function closeIMessage(){
   imPage.classList.remove("show");
   applySlide(false);
@@ -1058,8 +871,7 @@ myAvatarInput.addEventListener("change", e=>{
     myAvatarSrc = ev.target.result;
     saveAllData(); // 保存数据
     imRenderAll();
-  };
-  reader.readAsDataURL(file);
+  };  reader.readAsDataURL(file);
 });
 
 // 点右上角原来那个键 → 选图 → 设为 iMessage 页背景
@@ -1139,8 +951,7 @@ const volumeArea = $("volumeArea"), imgFileInput = $("imgFileInput");
 volumeArea.addEventListener("click", ()=>{ imgFileInput.click(); });
 imgFileInput.onchange = e=>{
   const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
+  if(!file) return;  const reader = new FileReader();
   reader.onload = ev=>{
     const dataUrl = ev.target.result;
     lockPage.style.backgroundImage = `url(${dataUrl})`;
@@ -1196,8 +1007,7 @@ passPage.addEventListener('touchend', ()=>{
 
 function bindMouseDrag(target, isPullDown){
   target.addEventListener('mousedown', e=>{
-    startY = e.clientY;
-    lockPage.style.transition = "none";
+    startY = e.clientY;    lockPage.style.transition = "none";
     function mouseMove(ev){
       const delta = isPullDown ? ev.clientY - startY : startY - ev.clientY;
       if(!isPullDown && delta >= 0){
@@ -1294,8 +1104,7 @@ function leapMonth(y){ return lunarInfo[y-1900]&0xf; }
 function leapDays(y){ return leapMonth(y) ? ((lunarInfo[y-1900]&0x10000) ? 30 : 29) : 0; }
 function monthDays(y,m){ return (lunarInfo[y-1900]&(0x10000>>m)) ? 30 : 29; }
 
-function lunarYearDays(y){
-  let sum = 348;
+function lunarYearDays(y){  let sum = 348;
   for(let i=0x8000; i>0x8; i>>=1) sum += (lunarInfo[y-1900] & i) ? 1 : 0;
   return sum + leapDays(y);
 }
@@ -1364,8 +1173,7 @@ function updateLockScreen(){
    核心：自动保存与恢复模块
    ========================================================= */
 function saveAllData() {
-    const data = {
-        apiKey: apiKeyInput.value,
+    const data = {        apiKey: apiKeyInput.value,
         apiBase: apiBaseInput.value,
         systemPrompt: systemPromptInput.value,
         assistantName: assistantNameInput.value,
@@ -1377,14 +1185,14 @@ function saveAllData() {
         imBg: imPage.style.backgroundImage
     };
     try {
-        localStorage.setItem('iosLockSaveData', JSON.stringify(data));
+        localStorage.setItem('iosLockSaveData2', JSON.stringify(data));
     } catch(e) {
         console.warn("本地存储可能已满，图片未能保存", e);
     }
 }
 
 function loadAllData() {
-    const raw = localStorage.getItem('iosLockSaveData');
+    const raw = localStorage.getItem('iosLockSaveData2');
     if (!raw) return;
     try {
         const data = JSON.parse(raw);
